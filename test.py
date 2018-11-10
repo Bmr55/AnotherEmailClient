@@ -15,9 +15,9 @@ def test_msg_queue():
     msg3 = client.create_msg("Message Subject 3", "Message body 3", "test@gmail.com")
 
     # Add messages to the message queue
-    client.queue_msg(msg1)
-    client.queue_msg(msg2)
-    client.queue_msg(msg3)
+    client.enqueue_msg(msg1)
+    client.enqueue_msg(msg2)
+    client.enqueue_msg(msg3)
 
     # Send every message in the queue
     client.send_queue()
@@ -39,12 +39,4 @@ def test_send():
 
     # Send EmailMessage object
     client.send_msg_obj(msg)
-
-def test():
-    client = EmailClient()
-    client.set_server_name("gmail.com")
-    client.set_port(587)
-    client.start()
-
-test()
 
