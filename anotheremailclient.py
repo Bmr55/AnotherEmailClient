@@ -16,7 +16,7 @@ class EmailClient:
                 
     def set_server_name(self, name):
         print("Set server name = " + name)
-        self.server_name = "smtp." + name
+        self.server_name = name
 
     def set_port(self, port):
         print("Set port = " + str(port))
