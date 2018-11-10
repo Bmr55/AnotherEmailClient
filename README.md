@@ -39,7 +39,7 @@ client.start("gmail.com", 587)
 client.shutdown()
 ```
 
-## Login
+### Login
 ```python
 client.login("you@gmail.com", "password")
 ```
