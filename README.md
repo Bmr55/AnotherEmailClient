@@ -49,6 +49,11 @@ client.login("you@gmail.com", "password")
 client.send_msg("Message Subject", "Message Body", "recipient@gmail.com")
 ```
 
+### Send a message to multiple email addresses
+```python
+client.send_msg("Message Subject", "Message Body", ["recip1@gmail.com", "recip2@gmail.com", "recip3@gmail.com"])
+```
+
 ### Create EmailMessage object
 ```python
 msg = client.create_msg("Message Subject", "Message Body", "recipient@gmail.com")

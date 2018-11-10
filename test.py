@@ -40,3 +40,14 @@ def test_send():
     # Send EmailMessage object
     client.send_msg_obj(msg)
 
+def test_multi_send():
+    print("Testing function(s) send_msg() with multiple recipients")
+
+    # Create EmailClient object
+    client = EmailClient("gmail.com", 587, True)
+
+    # Login to email account
+    client.login("you@gmail.com", "password")
+
+    # Send a message to multiple email addresses
+    client.send_msg("Message Subject", "Message Body", ["recip1@gmail.com", "recip2@gmail.com", "recip3@gmail.com"])
