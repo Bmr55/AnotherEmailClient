@@ -40,5 +40,11 @@ def test_send():
     # Send EmailMessage object
     client.send_msg_obj(msg)
 
-test_send()
+def test():
+    client = EmailClient()
+    client.set_server_name("gmail.com")
+    client.set_port(587)
+    client.start()
+
+test()
 

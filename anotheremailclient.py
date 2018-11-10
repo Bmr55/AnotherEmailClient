@@ -54,11 +54,14 @@ class EmailClient:
         print('Message with subject "' +subject+ '" created')
         return msg
 
-    def queue_msg(self, email_msg):
+    def enqueue_msg(self, email_msg):
         self.msg_queue.put(email_msg)
 
     def clear_msg_queue(self):
         self.msg_queue = queue.Queue()
+
+    def get_msg_queue_size():
+        return self.msg_queue.qsize()
 
     def is_msg_queue_full(self):
         return self.msg_queue.full()

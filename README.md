@@ -61,7 +61,7 @@ client.send_msg_obj(msg)
 
 ### Add message to the queue
 ```python
-client.queue_msg(msg)
+client.enqueue_msg(msg)
 ```
 
 ### Send every message in the queue
@@ -72,6 +72,16 @@ client.send_queue()
 ### Send first 5 messages in the queue
 ```python
 client.send_queue(5)
+```
+
+### Get message queue size
+```python
+client.get_msg_queue_size()
+```
+
+### Clear message queue
+```python
+client.clear_msg_queue()
 ```
 
 ### Check if message queue is full
