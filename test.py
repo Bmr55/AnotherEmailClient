@@ -4,7 +4,7 @@ def test_send():
     print("Testing function(s) send_msg()")
 
     # Create EmailClient object
-    client = EmailClient("gmail.com", 587, True)
+    client = EmailClient("gmail.com", 587, start_session=True)
 
     # Login to email account
     client.login("sender@gmail.com", "password")
@@ -22,7 +22,7 @@ def test_multi_send():
     print("Testing function(s) send_msg() with multiple recipients")
 
     # Create EmailClient object
-    client = EmailClient("gmail.com", 587, True)
+    client = EmailClient("gmail.com", 587, start_session=True)
 
     # Login to email account
     client.login("you@gmail.com", "password")
@@ -34,7 +34,7 @@ def test_msg_queue():
     print("Testing function(s) create_msg() & send_queue()")
 
     # Create EmailClient object
-    client = EmailClient("gmail.com", 587, True)
+    client = EmailClient("gmail.com", 587, start_session=True)
 
     # Login to email account
     client.login("sender@gmail.com", "password")

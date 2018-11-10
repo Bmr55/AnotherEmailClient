@@ -10,7 +10,7 @@ from anotheremailclient import EmailClient
 
 ### Start a session during initialization
 ```python
-client = EmailClient("gmail.com", 587, True)
+client = EmailClient("gmail.com", 587, start_session=True)
 ```
 
 ### Initialize without starting a session
