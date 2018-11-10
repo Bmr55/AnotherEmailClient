@@ -1,0 +1,33 @@
+{
+    "messages": [
+        {
+            "from" : "sender@gmail.com",
+            "to" : [
+                "recip1@gmail.com"
+            ],
+            "subject" : "Greetings",
+            "body" : "Hello, How are you?"
+        },
+
+        {
+            "from" : "sender@gmail.com",
+            "to" : [
+                "recip1@gmail.com",
+                "recip2@gmail.com"
+            ],
+            "subject" : "Hello",
+            "body" : "Hello Friend,\n\tHow are you?"
+        },
+
+        {
+            "from" : "sender@gmail.com",
+            "to" : [
+                "recip1@gmail.com",
+                "recip2@gmail.com",
+                "recip3@gmail.com"
+            ],
+            "subject" : "Wow",
+            "body" : "Good"
+        }
+    ]
+}
