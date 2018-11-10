@@ -26,6 +26,8 @@ class EmailClient:
         print('Starting up server...')
         if name is not None and port is not None:    
             self.server = smtplib.SMTP("smtp." + name, port)
+            self.server_name = name
+            self.server_port = port
         elif self.server_name is not None and self.server_port is not None:
             self.server = smtplib.SMTP("smtp." + self.server_name, self.server_port)
         else:
@@ -85,7 +87,7 @@ class EmailClient:
                 print("Can't send. The number of messages to be sent must be > 0")
                 return
 
-            print("Attemping to send "+ number +" messages from the queue...")
+            print("Attemping to send "+ str(number) +" messages from the queue...")
             for i in range(number):
                 if self.msg_queue.empty() is False:
                     self._send(self.msg_queue.get())

@@ -8,7 +8,7 @@ A simple email client written in python
 from anotheremailclient import EmailClient
 ```
 
-### Starting a session during initialization
+### Start a session during initialization
 ```python
 client = EmailClient("gmail.com", 587, True)
 ```
@@ -34,7 +34,7 @@ client.start()
 client.start("gmail.com", 587)
 ```
 
-### Shutdown server
+### Shutdown session
 ```python
 client.shutdown()
 ```
