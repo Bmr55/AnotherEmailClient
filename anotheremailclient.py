@@ -56,6 +56,12 @@ class EmailClient:
         print('Message with subject "' +subject+ '" created')
         return msg
 
+    def add_attachment(self, msg, file):
+        content = file.read()
+        ft = file.name.split('.')[1]
+        mt = 'application/'+ft
+        msg.add_attachment(content, maintype=mt, subtype=ft, filename=file.name)
+
     def enqueue_msg(self, email_msg):
         self.msg_queue.put(email_msg)
 

@@ -67,3 +67,22 @@ def test_init():
 
     # Login to email account
     client.login("you@gmail.com", "password")
+
+def test_attachments():
+    print("Testing sending of attachments")
+
+    # Create EmailClient object
+    client = EmailClient("gmail.com", 587, start_session=True)
+
+    # Login to email account
+    client.login("sender@gmail.com", "password")
+
+    # Create an EmailMessage object
+    msg = client.create_msg("Message Subject", "Message Body", "test@gmail.com")
+
+    # Open file and attach to message
+    with open('test.txt', 'rb') as file:
+        client.add_attachment(msg, file)
+
+    # Send EmailMessage object
+    client.send_msg_obj(msg)
