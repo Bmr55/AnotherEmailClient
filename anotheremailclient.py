@@ -1,11 +1,11 @@
-import smtplib 
-import queue
+import email, smtplib, imaplib, queue, datetime
 from email.message import EmailMessage
 
 class EmailClient:
 
     def __init__(self, server_name=None, port=None, start_session=False):
-        self.server = None
+        self.smtp_server = None
+        self.imap_server = None
         self.server_name = server_name
         self.server_port = port
         self.sender_address = None
@@ -25,27 +25,67 @@ class EmailClient:
     def start(self, name=None, port=None):
         print('Starting up server...')
         if name is not None and port is not None:    
-            self.server = smtplib.SMTP("smtp." + name, port)
+            self.smtp_server = smtplib.SMTP("smtp." + name, port)
+            self.imap_server = imaplib.IMAP4_SSL("imap." + name)
             self.server_name = name
             self.server_port = port
         elif self.server_name is not None and self.server_port is not None:
-            self.server = smtplib.SMTP("smtp." + self.server_name, self.server_port)
+            self.smtp_server = smtplib.SMTP("smtp." + self.server_name, self.server_port)
+            self.imap_server = imaplib.IMAP4_SSL("imap." + self.server_name)
         else:
             print("Can't start due to missing server name and/or port")      
             return      
-        self.server.ehlo()
-        self.server.starttls()
+        self.smtp_server.ehlo()
+        self.smtp_server.starttls()
+
+    def restart(self):
+        self.start()
 
     def shutdown(self):
-        self.server = None  
         print("Shutting down server...")
+        self.smtp_server.quit() 
+        self.imap_server.logout()
 
     def session_started(self):
-        return self.server is not None
+        return self.smtp_server is not None and self.imap_server is not None
 
     def login(self, email, password):
-        self.server.login(email, password)
+        self.smtp_server.login(email, password)
+        self.imap_server.login(email, password)
         print("Logged in as "+email)
+
+    def get_inbox(self, scope='ALL'):
+        inbox = list()
+        selected = self.imap_server.select('INBOX')
+        result, data = self.imap_server.uid('search', None, scope)
+        num_messages = len(data[0].split())
+
+        for x in range(num_messages):
+            latest_email_uid = data[0].split()[x]
+            result, email_data = self.imap_server.uid('fetch', latest_email_uid, '(RFC822)')
+
+            raw_email = email_data[0][1]
+            raw_email_string = raw_email.decode('utf-8')
+            email_message = email.message_from_string(raw_email_string)
+
+            msg = EmailMessage()
+            msg['To'] = email.utils.parseaddr(email_message['To'])[1]
+            msg['From'] = email.utils.parseaddr(email_message['From'])[1]
+            msg['Subject'] = email_message['Subject']
+
+            date_tuple = email.utils.parsedate_tz(email_message['Date'])
+            if date_tuple:
+                local_date = datetime.datetime.fromtimestamp(email.utils.mktime_tz(date_tuple))
+                msg['Date'] = "%s" %(str(local_date.strftime("%a, %d %b %Y %H:%M:%S")))
+
+            for part in email_message.walk():
+                if part.get_content_type() == "text/plain":
+                    body = part.get_payload(decode=True)
+                    msg.set_content(str(body))
+                else:
+                    continue                
+            inbox.append(msg)
+        return inbox
 
     def create_msg(self, subject, body, recipients):
         msg = EmailMessage()
@@ -106,5 +146,5 @@ class EmailClient:
         self._send(msg)
 
     def _send(self, msg):
-        self.server.send_message(msg)
+        self.smtp_server.send_message(msg)
         print('Message with subject "'+msg['Subject']+'" sent')
