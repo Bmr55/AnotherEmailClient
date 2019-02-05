@@ -43,8 +43,10 @@ class EmailClient:
 
     def shutdown(self):
         print("Shutting down server...")
-        self.smtp_server.quit() 
+        self.smtp_server.quit()
+        self.smtp_server = None
         self.imap_server.logout()
+        self.imap_server = None
 
     def session_started(self):
         return self.smtp_server is not None and self.imap_server is not None
