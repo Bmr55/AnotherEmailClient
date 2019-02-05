@@ -4,8 +4,8 @@ from email.message import EmailMessage
 class EmailClient:
 
     def __init__(self, server_name=None, port=None, start_session=False):
-        self.smtp_server = None
-        self.imap_server = None
+        self.smtp_conn = None
+        self.imap_conn = None
         self.server_name = server_name
         self.server_port = port
         self.sender_address = None
@@ -25,46 +25,46 @@ class EmailClient:
     def start(self, name=None, port=None):
         print('Starting up server...')
         if name is not None and port is not None:    
-            self.smtp_server = smtplib.SMTP("smtp." + name, port)
-            self.imap_server = imaplib.IMAP4_SSL("imap." + name)
+            self.smtp_conn = smtplib.SMTP("smtp." + name, port)
+            self.imap_conn = imaplib.IMAP4_SSL("imap." + name)
             self.server_name = name
             self.server_port = port
         elif self.server_name is not None and self.server_port is not None:
-            self.smtp_server = smtplib.SMTP("smtp." + self.server_name, self.server_port)
-            self.imap_server = imaplib.IMAP4_SSL("imap." + self.server_name)
+            self.smtp_conn = smtplib.SMTP("smtp." + self.server_name, self.server_port)
+            self.imap_conn = imaplib.IMAP4_SSL("imap." + self.server_name)
         else:
             print("Can't start due to missing server name and/or port")      
             return      
-        self.smtp_server.ehlo()
-        self.smtp_server.starttls()
+        self.smtp_conn.ehlo()
+        self.smtp_conn.starttls()
 
     def restart(self):
         self.start()
 
     def shutdown(self):
         print("Shutting down server...")
-        self.smtp_server.quit()
-        self.smtp_server = None
-        self.imap_server.logout()
-        self.imap_server = None
+        self.smtp_conn.quit()
+        self.smtp_conn = None
+        self.imap_conn.logout()
+        self.imap_conn = None
 
     def session_started(self):
-        return self.smtp_server is not None and self.imap_server is not None
+        return self.smtp_conn is not None and self.imap_conn is not None
 
     def login(self, email, password):
-        self.smtp_server.login(email, password)
-        self.imap_server.login(email, password)
+        self.smtp_conn.login(email, password)
+        self.imap_conn.login(email, password)
         print("Logged in as "+email)
 
     def get_inbox(self, scope='ALL'):
         inbox = list()
-        selected = self.imap_server.select('INBOX')
-        result, data = self.imap_server.uid('search', None, scope)
+        selected = self.imap_conn.select('INBOX')
+        result, data = self.imap_conn.uid('search', None, scope)
         num_messages = len(data[0].split())
 
         for x in range(num_messages):
             latest_email_uid = data[0].split()[x]
-            result, email_data = self.imap_server.uid('fetch', latest_email_uid, '(RFC822)')
+            result, email_data = self.imap_conn.uid('fetch', latest_email_uid, '(RFC822)')
 
             raw_email = email_data[0][1]
             raw_email_string = raw_email.decode('utf-8')
@@ -148,5 +148,5 @@ class EmailClient:
         self._send(msg)
 
     def _send(self, msg):
-        self.smtp_server.send_message(msg)
+        self.smtp_conn.send_message(msg)
         print('Message with subject "'+msg['Subject']+'" sent')
